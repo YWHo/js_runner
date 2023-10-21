@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
 const App = () => {
-  return <h1>hello world</h1>;
+  const [input, setInput] = useState('');
+  const [code, setCode] = useState('');
+
+  const onClick = () => {
+    console.log(input);
+  };
+
+  return (
+    <div>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+      ></textarea>
+      <div>
+        <button onClick={onClick}>Submit</button>
+      </div>
+      <pre></pre>
+    </div>
+  );
 };
 
 const root = ReactDOM.createRoot(
@@ -13,5 +31,4 @@ root.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
-)
- 
+);

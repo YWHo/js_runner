@@ -10,19 +10,19 @@ export const unpkgPathPlugin = (inputCode: string) => {
   return {
     name: 'unpkg-path-plugin',  // label for debugging purpose
     setup(build: esbuild.PluginBuild) {
+
+      build.onResolve({ filter: /(^index\.js$)/ }, () => {
+        return { path: 'index.js', namespace: 'a'}
+      });
+
+      build.onResolve({ filter: /^\.+\// }, (args: any) => {
+        return {
+          namespace: 'a',
+          path: new URL(args.path, `https://unpkg.com${args.resolveDir}/`).href
+        }
+       });
+
       build.onResolve({ filter: /.*/ }, async (args: any) => {
-        console.log('onResolve', args);
-        if (args.path === 'index.js') {
-          return { path: args.path, namespace: 'a ' };
-        }
-
-        if (args.path.includes('./') || args.path.includes('../')) {
-          return {
-            namespace: 'a',
-            path: new URL(args.path, `https://unpkg.com${args.resolveDir}/`).href
-          }
-        }
-
         return {
           namespace: 'a',
           path: `https://www.unpkg.com/${args.path}`

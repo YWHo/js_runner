@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom/client";
-import * as esbuild from "esbuild-wasm";
-import { unpkgPathPlugin } from "./pluggins/unpkg-path-pluggin";
-import { fetchPlugin } from "./pluggins/fetch-plugin";
-import CodeEditor from "./components/code-editor";
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+import * as esbuild from 'esbuild-wasm';
+import { unpkgPathPlugin } from './pluggins/unpkg-path-pluggin';
+import { fetchPlugin } from './pluggins/fetch-plugin';
+import CodeEditor from './components/code-editor';
 
 const App = () => {
   const ref = useRef<any>();
   const iframeRef = useRef<any>();
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   const startService = async () => {
     ref.current = await esbuild.startService({
@@ -27,19 +27,19 @@ const App = () => {
     iframeRef.current.srcdoc = html;
 
     const result = await ref.current.build({
-      entryPoints: ["index.js"],
+      entryPoints: ['index.js'],
       bundle: true,
       write: false,
       plugins: [unpkgPathPlugin(), fetchPlugin(input)],
       define: {
-        "process.env.NODE_ENV": '"production"',
-        global: "window",
+        'process.env.NODE_ENV': '"production"',
+        global: 'window',
       },
     });
 
     iframeRef.current.contentWindow.postMessage(
       result.outputFiles[0].text,
-      "*"
+      '*',
     );
   };
 
@@ -66,7 +66,7 @@ const App = () => {
   return (
     <div>
       <CodeEditor
-        initialValue="const a = 1;"
+        initialValue='const a = 1;'
         onChange={(value) => setInput(value)}
       />
       <textarea
@@ -77,7 +77,7 @@ const App = () => {
         <button onClick={onClick}>Submit</button>
       </div>
       <iframe
-        title="code preview"
+        title='code preview'
         ref={iframeRef}
         sandbox="allow-scripts"
         srcDoc={html}
@@ -87,11 +87,11 @@ const App = () => {
 };
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById('root') as HTMLElement,
 );
 
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

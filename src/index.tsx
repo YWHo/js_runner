@@ -4,6 +4,7 @@ import * as esbuild from 'esbuild-wasm';
 import { unpkgPathPlugin } from './pluggins/unpkg-path-pluggin';
 import { fetchPlugin } from './pluggins/fetch-plugin';
 import CodeEditor from './components/code-editor';
+import 'bulmaswatch/superhero/bulmaswatch.min.css';
 
 const App = () => {
   const ref = useRef<any>();
@@ -32,7 +33,7 @@ const App = () => {
       write: false,
       plugins: [unpkgPathPlugin(), fetchPlugin(input)],
       define: {
-        'process.env.NODE_ENV': '"production"',
+        'process.env.NODE_ENV': 'production',
         global: 'window',
       },
     });
@@ -79,7 +80,7 @@ const App = () => {
       <iframe
         title='code preview'
         ref={iframeRef}
-        sandbox="allow-scripts"
+        sandbox='allow-scripts'
         srcDoc={html}
       />
     </div>

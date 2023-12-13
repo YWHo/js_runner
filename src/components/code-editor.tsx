@@ -4,6 +4,7 @@ import { editor as mEditor } from 'monaco-editor';
 import prettier from 'prettier';
 import babel from 'prettier/plugins/babel';
 import estree from 'prettier/plugins/estree';
+import './code-editor.css';
 
 interface CodeEditorProps {
   initialValue: string;
@@ -27,27 +28,34 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     console.log('unformatted:\n', unformatted);
 
     // format that value
-    const formatted = await prettier.format(unformatted || '', {
-      parser: 'babel',
-      plugins: [babel, estree],
-      useTabs: false,
-      semi: true,
-      singleQuote: true,
-    });
+    const formatted = (
+      await prettier.format(unformatted || '', {
+        parser: 'babel',
+        plugins: [babel, estree],
+        useTabs: false,
+        semi: true,
+        singleQuote: true,
+      })
+    ).replace(/\n$/, '');
 
     // set the formatted value back
     editorRef.current?.setValue(formatted);
   };
 
   return (
-    <div>
-      <button onClick={onClickFormat}>Format</button>
+    <div className='editor-wrapper'>
+      <button
+        className='button button-format is-primary is-small'
+        onClick={onClickFormat}
+      >
+        Format
+      </button>
       <MonacoEditor
         onMount={onEditorDidMount}
         value={initialValue}
-        theme="vs-dark"
-        language="javascript"
-        height="500px"
+        theme='vs-dark'
+        language='javascript'
+        height='500px'
         options={{
           wordWrap: 'on',
           minimap: { enabled: false },

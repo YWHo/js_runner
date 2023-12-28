@@ -67,7 +67,17 @@ const App = () => {
   return (
     <div>
       <CodeEditor
-        initialValue='const a = 1;'
+        initialValue={
+          'const a = 1;\n' +
+          'const App = () => {\n' +
+          '  return (\n' +
+          '    <div>\n' +
+          '      <h1>Hello World</h1>\n' +
+          '      <button onClick={() => console.log("clicked!")}>Click me</button>\n' +
+          '    </div>\n' +
+          '  )\n' +
+          '}'
+        }
         onChange={(value) => setInput(value)}
       />
       <textarea

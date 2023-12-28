@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import MonacoEditor, { OnMount as EditorDidMount } from '@monaco-editor/react';
+import MonacoEditor, { OnChange as EditorOnChange, OnMount as EditorDidMount } from '@monaco-editor/react';
 import { editor as mEditor } from 'monaco-editor';
 import prettier from 'prettier';
 import babel from 'prettier/plugins/babel';
@@ -15,13 +15,20 @@ interface CodeEditorProps {
 const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   const editorRef = useRef<mEditor.IStandaloneCodeEditor>();
 
+  const onEditorChange: EditorOnChange = (value) => {
+    console.log('onEditorChange value:\n', value);
+    // console.log('onEditorChange event:\n', event);
+    onChange(value || '');
+  }
+
   const onEditorDidMount: EditorDidMount = (editorInstance, monacoInstance) => {
     console.log('onMount: the editor instance:', editorInstance);
     console.log('onMount: the monaco instance:', monacoInstance);
     editorRef.current = editorInstance;
-    editorInstance.onDidChangeModelContent(() => {
-      onChange(editorInstance.getValue());
-    });
+    // editorInstance.onDidChangeModelContent(() => {
+    //   console.log('onMount: editorInstance change:\n', editorInstance.getValue());
+    //   onChange(editorInstance.getValue());
+    // });
 
     editorInstance.updateOptions({ tabSize: 2 });
   };
@@ -60,6 +67,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         theme='vs-dark'
         language='javascript'
         height='500px'
+        onChange={onEditorChange}
         options={{
           wordWrap: 'on',
           minimap: { enabled: false },

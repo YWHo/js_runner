@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import MonacoEditor, { OnMount } from '@monaco-editor/react';
+import MonacoEditor, { OnMount as EditorDidMount } from '@monaco-editor/react';
 import { editor as mEditor } from 'monaco-editor';
 import prettier from 'prettier';
 import babel from 'prettier/plugins/babel';
@@ -11,15 +11,19 @@ interface CodeEditorProps {
   onChange(value: string): void;
 }
 
+// CodeEditor component
 const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   const editorRef = useRef<mEditor.IStandaloneCodeEditor>();
-  const onEditorDidMount: OnMount = (editor) => {
-    editorRef.current = editor;
-    editor.onDidChangeModelContent(() => {
-      onChange(editor.getValue());
+
+  const onEditorDidMount: EditorDidMount = (editorInstance, monacoInstance) => {
+    console.log('onMount: the editor instance:', editorInstance);
+    console.log('onMount: the monaco instance:', monacoInstance);
+    editorRef.current = editorInstance;
+    editorInstance.onDidChangeModelContent(() => {
+      onChange(editorInstance.getValue());
     });
 
-    editor.updateOptions({ tabSize: 2 });
+    editorInstance.updateOptions({ tabSize: 2 });
   };
 
   const onClickFormat = async () => {

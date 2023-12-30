@@ -1,0 +1,1 @@
+declare module 'monaco-jsx-highlighter'; // work-around typescript complaint

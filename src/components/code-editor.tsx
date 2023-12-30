@@ -1,9 +1,15 @@
 import React, { useRef } from 'react';
-import MonacoEditor, { OnChange as EditorOnChange, OnMount as EditorDidMount } from '@monaco-editor/react';
+import MonacoEditor, {
+  OnChange as EditorOnChange,
+  OnMount as EditorDidMount,
+} from '@monaco-editor/react';
 import { editor as mEditor } from 'monaco-editor';
 import prettier from 'prettier';
 import babel from 'prettier/plugins/babel';
 import estree from 'prettier/plugins/estree';
+import { parse } from '@babel/parser';
+import traverse from '@babel/traverse';
+import MonacoJSXHighlighter from 'monaco-jsx-highlighter';
 import './code-editor.css';
 
 interface CodeEditorProps {
@@ -19,7 +25,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     console.log('onEditorChange value:\n', value);
     // console.log('onEditorChange event:\n', event);
     onChange(value || '');
-  }
+  };
 
   const onEditorDidMount: EditorDidMount = (editorInstance, monacoInstance) => {
     console.log('onMount: the editor instance:', editorInstance);
@@ -31,6 +37,23 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     // });
 
     editorInstance.updateOptions({ tabSize: 2 });
+
+    const babelParse = (code: string) => {
+      console.log('babelParse: code:\n', code);
+      return parse(code, {
+        sourceType: 'module',
+        plugins: ['jsx'],
+        errorRecovery: true,
+      });
+    };
+
+    const highlighter = new MonacoJSXHighlighter(
+      monacoInstance,
+      babelParse,
+      traverse,
+      editorInstance,
+    );
+    highlighter.highlightOnDidChangeModelContent(100);
   };
 
   const onClickFormat = async () => {

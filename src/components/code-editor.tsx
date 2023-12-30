@@ -11,6 +11,7 @@ import { parse } from '@babel/parser';
 import traverse from '@babel/traverse';
 import MonacoJSXHighlighter from 'monaco-jsx-highlighter';
 import './code-editor.css';
+import './syntax.css';
 
 interface CodeEditorProps {
   initialValue: string;
@@ -22,14 +23,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   const editorRef = useRef<mEditor.IStandaloneCodeEditor>();
 
   const onEditorChange: EditorOnChange = (value) => {
-    console.log('onEditorChange value:\n', value);
-    // console.log('onEditorChange event:\n', event);
     onChange(value || '');
   };
 
   const onEditorDidMount: EditorDidMount = (editorInstance, monacoInstance) => {
-    console.log('onMount: the editor instance:', editorInstance);
-    console.log('onMount: the monaco instance:', monacoInstance);
     editorRef.current = editorInstance;
     // editorInstance.onDidChangeModelContent(() => {
     //   console.log('onMount: editorInstance change:\n', editorInstance.getValue());
@@ -39,7 +36,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     editorInstance.updateOptions({ tabSize: 2 });
 
     const babelParse = (code: string) => {
-      console.log('babelParse: code:\n', code);
       return parse(code, {
         sourceType: 'module',
         plugins: ['jsx'],

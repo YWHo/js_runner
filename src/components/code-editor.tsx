@@ -55,7 +55,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   const onClickFormat = async () => {
     // get current value from editor
     const unformatted = editorRef.current?.getValue();
-    console.log('unformatted:\n', unformatted);
 
     // format that value
     const formatted = (

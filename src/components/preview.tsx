@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 
 const html = `
     <html>
@@ -29,20 +29,17 @@ const Preview: React.FC<PreviewProps> = ({ userCode }) => {
 
   useEffect(() => {
     iframeRef.current.srcdoc = html;
-    iframeRef.current.contentWindow.postMessage(
-      userCode,
-      '*',
-    );
+    iframeRef.current.contentWindow.postMessage(userCode, '*');
   }, [userCode]);
 
   return (
     <iframe
-        title='code preview'
-        ref={iframeRef}
-        sandbox='allow-scripts'
-        srcDoc={html}
-      />
+      title='code preview'
+      ref={iframeRef}
+      sandbox='allow-scripts'
+      srcDoc={html}
+    />
   );
-}
+};
 
 export default Preview;

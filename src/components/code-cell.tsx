@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import Preview from './preview';
 import CodeEditor from './code-editor';
+import Preview from './preview';
+import Resizable from './resizable';
 import bundle from '../bundler';
 
 const initialValue =
@@ -19,22 +20,24 @@ const CodeCell = () => {
   const [userCode, setUserCode] = useState('');
   const [input, setInput] = useState(initialValue);
 
-  const onClick = async () => {
-    const result = await bundle(input);
-    setUserCode(result);
-  };
+  // const onClick = async () => {
+  //   const result = await bundle(input);
+  //   setUserCode(result);
+  // };
 
   return (
-    <div>
-      <CodeEditor
-        initialValue={initialValue}
-        onChange={(value) => setInput(value)}
-      />
-      <div>
-        <button onClick={onClick}>Submit</button>
+    <Resizable direction='vertical'>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'row'}}>
+        <CodeEditor
+          initialValue={initialValue}
+          onChange={(value) => setInput(value)}
+        />
+        <Preview userCode={userCode} />
+        {/* <div>
+          <button onClick={onClick}>Submit</button>
+        </div> */}
       </div>
-      <Preview userCode={userCode} />
-    </div>
+    </Resizable>
   );
 };
 

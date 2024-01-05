@@ -10,12 +10,17 @@ interface ResizableProps {
 const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
   const [innerHeight, setInnerHeight] = useState(window.innerHeight);
   const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(Math.floor(window.innerWidth * 0.75));
   let resizableProps: ResizableBoxProps;
 
   useEffect(() => {
     const listener = debounce(() => {
       setInnerHeight(window.innerHeight);
       setInnerWidth(window.innerWidth);
+      const constraintedWidth = Math.floor(window.innerWidth * 0.75);
+      if (constraintedWidth < width) {
+        setWidth(constraintedWidth);
+      }
     }, 100);
 
     window.addEventListener('resize', listener);
@@ -23,6 +28,7 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
     return () => {
       window.removeEventListener('resize', listener);
     };
+    // eslint-disable-next-line
   }, []);
 
   // Note: Need Math.floor() to convert the result of floating point multiplication
@@ -32,10 +38,13 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
     resizableProps = {
       className: 'resize-horizontal',
       height: Infinity,
-      width: Math.floor(innerWidth * 0.75),
+      width,
       minConstraints: [Math.floor(innerWidth * 0.2), Infinity],
       maxConstraints: [Math.floor(innerWidth * 0.75), Infinity],
       resizeHandles: ['e'],
+      onResizeStop: (event, data) => {
+        setWidth(Math.floor(data.size.width));
+      }
     };
   } else {
     resizableProps = {

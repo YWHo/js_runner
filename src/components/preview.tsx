@@ -9,15 +9,25 @@ const html = `
       <body>
         <div id="root"></div>
         <script>
+          const handleError = (err) => {
+            const root = document.querySelector('#root');
+            root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>';
+            console.error(err);
+          }
+
+          window.addEventListener('error', (event) => {
+            event.preventDefault();
+            handleError(event.error);
+          });
+
           window.addEventListener('message', (event) => {
             try {
               eval(event.data); 
             } catch (err) {
-              const root = document.querySelector('#root');
-              root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>';
-              console.error(err);
+              handleError(err);
             }
           }, false)
+
         </script>
       </body>
     </html>
@@ -25,9 +35,10 @@ const html = `
 
 interface PreviewProps {
   userCode: string;
+  bundlingErr: string;
 }
 
-const Preview: React.FC<PreviewProps> = ({ userCode }) => {
+const Preview: React.FC<PreviewProps> = ({ userCode, bundlingErr }) => {
   const iframeRef = useRef<any>();
 
   useEffect(() => {
@@ -45,6 +56,7 @@ const Preview: React.FC<PreviewProps> = ({ userCode }) => {
         sandbox='allow-scripts'
         srcDoc={html}
       />
+      {bundlingErr && <div className='preview-error'>{bundlingErr}</div> }
     </div>
   );
 };

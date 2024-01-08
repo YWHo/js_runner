@@ -18,12 +18,15 @@ const initialValue =
 
 const CodeCell = () => {
   const [userCode, setUserCode] = useState('');
+  const [err, setErr] = useState('');
   const [input, setInput] = useState(initialValue);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const result = await bundle(input);
-      setUserCode(result);
+      setUserCode(result.code);
+      setErr(result
+        .err);
     }, 1000);
 
     return () => {
@@ -42,10 +45,7 @@ const CodeCell = () => {
             onChange={(value) => setInput(value)}
           />
         </Resizable>
-        <Preview userCode={userCode} />
-        {/* <div>
-          <button onClick={onClick}>Submit</button>
-        </div> */}
+        <Preview userCode={userCode} bundlingErr={err} />
       </div>
     </Resizable>
   );

@@ -10,7 +10,7 @@ module.exports = {
             warning.module.resource.includes('node_modules') &&
             warning.details &&
             warning.details.includes('source-map-loader')
-          )
+          );
         },
       ],
       resolve: {

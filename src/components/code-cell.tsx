@@ -6,7 +6,9 @@ import bundle from '../bundler';
 
 const initialValue =
   'import React from "react";\n' +
+  'import ReactDOM from "react-dom/client";\n' +
   'const a = 1;\n' +
+  'console.log("a = ", a);\n' +
   'const App = () => {\n' +
   '  return (\n' +
   '    <div>\n' +
@@ -14,12 +16,23 @@ const initialValue =
   '      <button onClick={() => console.log("clicked!")}>Click me</button>\n' +
   '    </div>\n' +
   '  )\n' +
-  '}';
+  '};\n' +
+  'const root = ReactDOM.createRoot(document.getElementById("root"))\n' + 
+  'root.render(<App />);\n';
 
 const CodeCell = () => {
   const [userCode, setUserCode] = useState('');
   const [err, setErr] = useState('');
   const [input, setInput] = useState(initialValue);
+
+  useEffect(() => {
+    const initialRun = async () => {
+      const result = await bundle(input);
+      setUserCode(result.code);
+    }
+    setTimeout(initialRun, 500);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(async () => {

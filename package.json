@@ -21,6 +21,7 @@
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
     "@types/react-resizable": "^3.0.7",
+    "@uiw/react-md-editor": "^4.0.2",
     "axios": "^1.5.1",
     "buffer": "^6.0.3",
     "bulmaswatch": "^0.8.1",
@@ -39,7 +40,8 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "react-app-rewired": "^2.2.1"
+    "react-app-rewired": "^2.2.1",
+    "source-map-loader": "^4.0.2"
   },
   "eslintConfig": {
     "extends": [

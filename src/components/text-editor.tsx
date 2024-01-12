@@ -1,15 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
+import { Cell } from '../state';
+import { useActions } from '../hooks/use-actions';
 import './text-editor.css';
 
-const TextEditor: React.FC = () => {
+interface TextEditorProps {
+  cell: Cell;
+}
+
+const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState('# Header');
+  const { updateCell } = useActions();
 
   useEffect(() => {
     const listener = (event: MouseEvent) => {
-      if (ref.current && event.target && ref.current.contains(event.target as Node)) {
+      if (
+        ref.current &&
+        event.target &&
+        ref.current.contains(event.target as Node)
+      ) {
         return;
       }
       setEditing(false);
@@ -23,16 +33,26 @@ const TextEditor: React.FC = () => {
 
   if (editing) {
     return (
-      <div className='text-editor' ref={ref}>
-        <MDEditor value={value} onChange={v => setValue(v || '')} />
+      <div className='text-editor' data-color-mode='dark' ref={ref}>
+        <MDEditor
+          value={cell.content}
+          onChange={(v) => updateCell(cell.id, v || '')}
+        />
       </div>
     );
   }
 
   return (
-    <div className='text-editor card' onClick={() => setEditing(true)}>
+    <div
+      className='text-editor card'
+      data-color-mode='dark'
+      onClick={() => setEditing(true)}
+    >
       <div className='class-content'>
-        <MDEditor.Markdown source={value} style={{ minHeight: 200 }} />
+        <MDEditor.Markdown
+          source={cell.content || 'Click to edit'}
+          style={{ minHeight: 200 }}
+        />
       </div>
     </div>
   );

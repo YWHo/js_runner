@@ -1,17 +1,13 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom/client';
-import CodeCell from './components/code-cell';
-import TextEditor from './components/text-editor';
+import CellList from './components/cell-list';
 import { store } from './state';
 import 'bulmaswatch/superhero/bulmaswatch.min.css';
 
 const App = () => (
   <Provider store={store}>
-    <div data-color-mode='dark'>
-      <TextEditor />
-      <CodeCell />
-    </div>
+    <CellList />
   </Provider>
 );
 

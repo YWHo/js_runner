@@ -39,17 +39,16 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
     }
     case ActionType.MOVE_CELL: {
       const { id: givenId, direction } = action.payload;
-      const index = state.order.findIndex((id) => id === givenId);
-      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+      const foundIndex = state.order.findIndex((id) => id === givenId);
+      const targetIndex = direction === 'up' ? foundIndex - 1 : foundIndex + 1;
       if (targetIndex < 0 || targetIndex > state.order.length - 1) {
         return state;
       }
-      state.order[index] = state.order[targetIndex];
+      state.order[foundIndex] = state.order[targetIndex];
       state.order[targetIndex] = givenId;
       return state;
     }
-
-    case ActionType.INSERT_CELL_BEFORE: {
+    case ActionType.INSERT_CELL_AFTER: {
       const { id: givenId, type } = action.payload;
       const cell: Cell = {
         content: '',
@@ -58,11 +57,11 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       };
 
       state.data[cell.id] = cell;
-      const index = state.order.findIndex((id) => id === givenId);
-      if (index < 0) {
-        state.order.push(cell.id);
+      const foundIndex = state.order.findIndex((id) => id === givenId);
+      if (foundIndex < 0) {
+        state.order.unshift(cell.id);
       } else {
-        state.order.splice(index, 0, cell.id);
+        state.order.splice(foundIndex + 1, 0, cell.id);
       }
       return state;
     }

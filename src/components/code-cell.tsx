@@ -5,17 +5,22 @@ import Resizable from './resizable';
 import { Cell } from '../state';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
+import './code-cell.css';
 
-// const initialValue =
-//   'import React from "react";\n' +
+// const initialCodeSample =
+//   'import React, { useState } from "react";\n' +
 //   'import ReactDOM from "react-dom/client";\n' +
-//   'const a = 1;\n' +
-//   'console.log("a = ", a);\n' +
+//   '' +
 //   'const App = () => {\n' +
+//   '  const [count, setCount] = useState(0);\n' +
+//   '  console.log("count = ", count);\n' +
+//   '' +
 //   '  return (\n' +
 //   '    <div>\n' +
-//   '      <h1>Hello World</h1>\n' +
-//   '      <button onClick={() => console.log("clicked!")}>Click me</button>\n' +
+//   '      <h1>This is a sample</h1>\n' +
+//   '      <button onClick={() => setCount(count + 1)}>\n' +
+//   '        Click count: {count}\n' +
+//   '      </button>\n' +
 //   '    </div>\n' +
 //   '  )\n' +
 //   '};\n' +
@@ -63,7 +68,15 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
             onChange={(value) => updateCell(cell.id, value)}
           />
         </Resizable>
-        {bundleResult && (
+        {!bundleResult || bundleResult.loading ? (
+          <div className='progress-wrapper'>
+            <div className='progress-cover'>
+              <progress className='progress is-small is-primary' max='100'>
+                Loading
+              </progress>
+            </div>
+          </div>
+        ) : (
           <Preview
             userCode={bundleResult.code}
             bundlingErr={bundleResult.err}

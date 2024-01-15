@@ -51,7 +51,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
       <div className='class-content'>
         <MDEditor.Markdown
           source={cell.content || 'Click to edit'}
-          style={{ minHeight: 200 }}
+          style={{ minHeight: 200, padding: '8px' }}
         />
       </div>
     </div>

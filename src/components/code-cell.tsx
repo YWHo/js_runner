@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import CodeEditor from './code-editor';
 import Preview from './preview';
 import Resizable from './resizable';
 import { Cell } from '../state';
+import { memoizedSelectOrderedCells } from '../state/selectors';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
 import './code-cell.css';
@@ -34,9 +35,10 @@ interface CodeCellProps {
 const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   const { updateCell, createBundle } = useActions();
   const bundleResult = useTypedSelector((state) => state.bundles[cell.id]);
-  const cumulativeCode = useTypedSelector((state) => {
-    const { data, order } = state.cells;
-    const orderedCells = order.map((id) => data[id]);
+  const orderedCells = useTypedSelector((state) =>
+    memoizedSelectOrderedCells(state),
+  );
+  const cumulativeCodeString = useMemo(() => {
     const tmpCumulativeCode = [];
     for (let c of orderedCells) {
       if (c.type === 'code') {
@@ -46,9 +48,9 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
         break;
       }
     }
-    return tmpCumulativeCode;
-  });
-  const cumulativeCodeString = cumulativeCode.join('\n');
+    const cumulativeCodeString = tmpCumulativeCode.join('\n');
+    return cumulativeCodeString;
+  }, [cell.id, orderedCells]);
 
   // console.log(cumulativeCodeString);
 

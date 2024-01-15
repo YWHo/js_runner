@@ -39,7 +39,24 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     memoizedSelectOrderedCells(state),
   );
   const cumulativeCodeString = useMemo(() => {
-    const tmpCumulativeCode = [];
+    const tmpCumulativeCode = [
+      ` import _React from 'react';
+        import _ReactDOM from 'react-dom';
+        const show = (value) => {
+          const root = document.querySelector('#root');
+          if (typeof value === 'object') {
+            if (value.$$typeof && value.props) {
+              const reactRoot = _ReactDOM.createRoot(root);
+              reactRoot.render(value);
+            } else {
+              root.innerHTML = JSON.stringify(value);
+            }
+          } else {
+            root.innerHTML = value;
+          }
+        };
+      `,
+    ];
     for (let c of orderedCells) {
       if (c.type === 'code') {
         tmpCumulativeCode.push(c.content);

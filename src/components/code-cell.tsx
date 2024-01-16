@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import CodeEditor from './code-editor';
 import Preview from './preview';
 import Resizable from './resizable';
 import { Cell } from '../state';
-import { memoizedSelectOrderedCells } from '../state/selectors';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
+import { useCumulativeCodeString } from '../hooks/use-cumulative-code';
 import './code-cell.css';
 
 // const initialCodeSample =
@@ -35,47 +35,7 @@ interface CodeCellProps {
 const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   const { updateCell, createBundle } = useActions();
   const bundleResult = useTypedSelector((state) => state.bundles[cell.id]);
-  const orderedCells = useTypedSelector((state) =>
-    memoizedSelectOrderedCells(state),
-  );
-  const cumulativeCodeString = useMemo(() => {
-    const showFunc = `
-      import _React from 'react';
-      import _ReactDOM from 'react-dom';
-      var show = (value) => {
-        const root = document.querySelector('#root');
-        if (typeof value === 'object') {
-          if (value.$$typeof && value.props) {
-            const reactRoot = _ReactDOM.createRoot(root);
-            reactRoot.render(value);
-          } else {
-            root.innerHTML = JSON.stringify(value);
-          }
-        } else {
-          root.innerHTML = value;
-        }
-      };
-    `;
-    const showFuncNoop = 'var show = () => {}'; // use 'var' to allow multiple redefine
-    const tmpCumulativeCode = [];
-    for (let c of orderedCells) {
-      if (c.type === 'code') {
-        if (c.id === cell.id) {
-          tmpCumulativeCode.push(showFunc);
-        } else {
-          tmpCumulativeCode.push(showFuncNoop);
-        }
-        tmpCumulativeCode.push(c.content);
-      }
-      if (c.id === cell.id) {
-        break;
-      }
-    }
-    const cumulativeCodeString = tmpCumulativeCode.join('\n');
-    return cumulativeCodeString;
-  }, [cell.id, orderedCells]);
-
-  // console.log(cumulativeCodeString);
+  const cumulativeCodeString = useCumulativeCodeString(cell.id);
 
   useEffect(() => {
     if (!bundleResult) {

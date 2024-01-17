@@ -49,9 +49,9 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       return state;
     }
     case ActionType.INSERT_CELL_AFTER: {
-      const { id: givenId, type } = action.payload;
+      const { id: givenId, type, content = '' } = action.payload;
       const cell: Cell = {
-        content: '',
+        content,
         type,
         id: randomId(),
       };

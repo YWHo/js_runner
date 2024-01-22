@@ -7,3 +7,10 @@ Please note that everything in this app is temporary. Your text or code will be 
 ## Demo site
 
 https://js-runner.netlify.app/
+
+## Technnology for this App
+
+- React
+- Redux
+- TypeScript
+- Bulsma CSS
